@@ -1,5 +1,9 @@
 # SlimDungeon
 
-<img src="https://capsule-render.vercel.app/api?type=모양&color=색상코드&height=높이&section=header&text=텍스트&fontSize=텍스트크기" />
-필수 기능
+# 2025-03-04 4일차
+
+- 자료 구조와 Generic
+- 자료구조란 데이터를 구조적으로 표현하고 구현하는 주요한 알고리즘
+- 배열
+- 리스트
 
