@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     public PlayerCondition playerCondition;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         CharacterManager.Instance.Player = this;
         playerController = GetComponent<PlayerController>();
