@@ -1,8 +1,7 @@
 # 필수 기능 구현
 ## 기본 이동 및 점프
+1. Input System
+   ![image](https://github.com/user-attachments/assets/4021874f-805d-4474-b439-7ec0fe2d3441)
+   
 ## 체력바 UI
-- 자료 구조와 Generic
-- 자료구조란 데이터를 구조적으로 표현하고 구현하는 주요한 알고리즘
-- 배열
-- 리스트
-// 코드
+
