@@ -6,19 +6,10 @@ public class AnimationHandler : MonoBehaviour
 {
     public Animator animator;
 
-    private void Awake()
-    {
-        animator = GetComponent<Animator>();
-    }
 
-    public void MoveAnimation(Vector2 obj)
+    public void WallMove(bool isWall)
     {
-        animator.SetBool("Walk", obj.magnitude > 0.5f);
-    }
-
-    public void JumpAnimation()
-    {
-        animator.SetBool("Jump", true);
+        animator.SetBool("WallMove", isWall);
     }
 
 }

@@ -27,8 +27,17 @@ public class ItemObject : MonoBehaviour, IInteractable
         CharacterManager.Instance.Player.itemData = data;
         if(data.type != ItemType.Pad)
         {   
-            UsingItem();
-            Destroy(gameObject);
+            switch(data.type)
+            {
+                case ItemType.Consumalbe:
+                    UsingItem();
+                    Destroy(gameObject);
+                    break;
+                case ItemType.Equipable:
+                    EquipItme();
+                    break;
+            }
+
         }
 
     }
@@ -51,6 +60,14 @@ public class ItemObject : MonoBehaviour, IInteractable
             }
         }
      
+    }
+
+    public void EquipItme()
+    {
+        transform.SetParent(CharacterManager.Instance.Player.ModelTransform);
+        transform.localPosition = new Vector3(0 ,0.3f, 0);
+        transform.localEulerAngles = Vector3.zero;
+        gameObject.layer = LayerMask.NameToLayer("Equipment");
     }
 
  

@@ -1,8 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,22 +9,20 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed; 
     public float startSpeed;
     public float dashSpeed; 
-    public float jumpPower; 
+    public float jumpPower;
+    public float wallSlidingSpeed;
     private Vector2 curMovementInput; 
     public LayerMask groundLayMask;
     private float lastDashTime = 0f;  
     private float doubleTapThreshold = 0.3f;
 
-    public Transform Rig;
+    private Vector3 platformVelocity = Vector3.zero; // 발판의 속도 저장 변수
 
-    private Vector2 mouseDelta; 
+    private Vector2 mouseDelta;
 
     private Rigidbody _rigidbody;
 
-    public Action UseItem;
-
     public bool canDash = true;
-
 
     private void Awake()
     {
@@ -42,35 +37,38 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+
         Move();
+        CharacterManager.Instance.Player.interaction.WallInteraction(_rigidbody, wallSlidingSpeed);
+
     }
 
     private void LateUpdate()
     {
-        GameManager.Instance.CameraMovement.CameraLook(mouseDelta);
+        GameManager.Instance.cameraMovement.CameraLook(mouseDelta);
     }
 
     private void Move()
     {
-        if(curMovementInput.magnitude != 0)
-        {
-            Transform cameraDir = GameManager.Instance.cameraMovement.cameraContainer.transform;
-            Vector3 looForward = new Vector3(cameraDir.forward.x, 0f, cameraDir.forward.z).normalized;
-            Vector3 lookRight = new Vector3(cameraDir.right.x, 0f, cameraDir.right.z).normalized;
-            Vector3 dir = looForward * curMovementInput.y + lookRight * curMovementInput.x;
 
-            dir *= moveSpeed;
-            dir.y = _rigidbody.velocity.y;
+        Vector3 dir = MoveDirection();
+        Vector3 worldMove;
 
-            if(CameraMovement.isBool)  Rig.transform.forward = dir;
+        if (CameraMovement.isCurrentFp) worldMove = GameManager.Instance.cameraMovement.fpCameraRoot.TransformDirection(dir);
+        else worldMove = GameManager.Instance.cameraMovement.tpCameraRig.TransformDirection(dir);
 
-            _rigidbody.velocity = dir;
-        }
+        worldMove *= moveSpeed;
+        worldMove.y = _rigidbody.velocity.y;
+
+        _rigidbody.velocity = worldMove + platformVelocity;
+
+
     }
 
 
     public void OnMove(InputAction.CallbackContext context)
     {
+
         if (context.phase == InputActionPhase.Performed)
         {
             curMovementInput = context.ReadValue<Vector2>();
@@ -79,6 +77,7 @@ public class PlayerController : MonoBehaviour
         {
             curMovementInput = Vector2.zero;
         }
+
     }
 
     public void OnLook(InputAction.CallbackContext context)
@@ -109,7 +108,7 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < rays.Length; i++)
         {
 
-            if (Physics.Raycast(rays[i], 1f, groundLayMask))
+            if (Physics.Raycast(rays[i], 0.5f, groundLayMask))
                 return true;
         }
 
@@ -134,7 +133,15 @@ public class PlayerController : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
-            GameManager.Instance.cameraMovement.ObservantCameraPosition();
+            if(GameManager.Instance.cameraMovement.initialCamera == CameraType.FpCamera)
+            {
+
+                GameManager.Instance.cameraMovement.initialCamera = CameraType.TpCamera;
+            }
+            else
+            {
+                GameManager.Instance.cameraMovement.initialCamera = CameraType.FpCamera;
+            }
         }
     }
 
@@ -184,6 +191,20 @@ public class PlayerController : MonoBehaviour
 
         moveSpeed = startSpeed;
     }
+
+    public Vector3 MoveDirection()
+    {
+        Vector3 direction;
+
+       return direction = transform.forward* curMovementInput.y + transform.right * curMovementInput.x;
+    }
+
+    public void PlatformSpeed(Vector3 platformSpeed)
+    {
+        platformVelocity = platformSpeed;
+    }
+
+
 }
 
 

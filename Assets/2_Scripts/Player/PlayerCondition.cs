@@ -12,10 +12,10 @@ public class PlayerCondition : MonoBehaviour
 
     private void Update()
     {
-        health.Substract(health.passiveValue * Time.deltaTime);
-        stamina.Add(stamina.passiveValue*Time.deltaTime);
+        //health.Substract(health.passiveValue * Time.deltaTime);
+        stamina.Add(stamina.passiveValue * Time.deltaTime);
 
-        if(health.curValue < 0f)
+        if (health.curValue < 0f)
         {
             Die();
         }
