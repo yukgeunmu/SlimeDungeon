@@ -22,7 +22,9 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody _rigidbody;
 
-    public bool canDash = true;
+    private bool canDash = true;
+
+    [HideInInspector] public bool isAcceleration = false;
 
     private void Awake()
     {
@@ -37,10 +39,9 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-
-        Move();
+        if (!isAcceleration) Move();
         CharacterManager.Instance.Player.interaction.WallInteraction(_rigidbody, wallSlidingSpeed);
-
+        if (isGround()) isAcceleration = false;
     }
 
     private void LateUpdate()
@@ -109,7 +110,10 @@ public class PlayerController : MonoBehaviour
         {
 
             if (Physics.Raycast(rays[i], 0.5f, groundLayMask))
+            {
                 return true;
+            }
+
         }
 
         return false;
@@ -117,14 +121,13 @@ public class PlayerController : MonoBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.phase == InputActionPhase.Started)
         {
             if (Time.time - lastDashTime < doubleTapThreshold)
             {
                 Dash();
             }
-
-           
+        
             lastDashTime = Time.time;
         }
     }
@@ -203,6 +206,22 @@ public class PlayerController : MonoBehaviour
     {
         platformVelocity = platformSpeed;
     }
+
+    public void OnActiveCusor(InputAction.CallbackContext context)
+    {
+        if(context.phase == InputActionPhase.Started)
+        {
+            if(Cursor.lockState == CursorLockMode.Locked)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
+    }
+
 
 
 }

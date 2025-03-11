@@ -7,7 +7,8 @@ public enum ItemType
 {
     Pad,
     Consumalbe,
-    Equipable
+    Equipable,
+    Interactive
 }
 
 public enum ConsumableType

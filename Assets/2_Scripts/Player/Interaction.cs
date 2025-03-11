@@ -75,6 +75,11 @@ public class Interaction : MonoBehaviour
             }
 
         }
+
+        if(Cursor.lockState == CursorLockMode.Confined)
+        {
+
+        }
     }
     private void SetPromptText()
     {

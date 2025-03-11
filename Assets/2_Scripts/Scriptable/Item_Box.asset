@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b6f79d0f805e9248b875edf05430430, type: 3}
-  m_Name: Item_Helmet
+  m_Name: Item_Box
   m_EditorClassIdentifier: 
-  displayName: "\uD5EC\uB9F7"
-  descroption: "\uCC29\uC6A9\uD558\uBA74 \uBCBD\uC744 \uBD80\uC21C\uB2E4"
-  type: 2
+  displayName: "\uBC15\uC2A4"
+  descroption: "\uC544\uC774\uD15C\uC774 \uB4E4\uC5B4\uC788\uB2E4"
+  type: 3
   consumables: []
