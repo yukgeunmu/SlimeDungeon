@@ -1,41 +1,98 @@
+# 조작키
+- 플레이어의 이동 : WASD
+- 점프 : Space
+- 대쉬 : WASD 빠르게 두번 클릭
+- 시점 전환 : Tab
+- 아이템 사용 : E
+- 커서 활성화 : Alt
+- 마우스 좌클릭 : 발사대 점프
+-------------------------------------------------------------------------------------
 # 필수 기능 구현
-## 기본 이동 및 점프
-1. Input System을 활용하여 Input Action을 준비 했습니다.
-![image](https://github.com/user-attachments/assets/86ec70bc-bb75-4286-9fc2-b9e7fbc58b9a)
+### - 기본 이동 및 점프
+- 플레이어의 기본 이동과 점프를 Input System을 활용해 구현했습니다.
+![alt text](image.png)
 
-2. 캐릭터의 전체적인 관리를 하는 CharacterManager를 싱글톤 패턴으로 구현했습니다. 그리고 방어 코드를 작성해 CharacterManager가 없으면 오브젝트를 생성하도록 코드를 작성했습니다.
--  방어 코드
-```csharp
-    public static CharacterManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-                _instance = new GameObject("CharacterManager").AddComponent<CharacterManager>();
-            return _instance;
-        }
-    }        
-```
-- 싱글톤 패턴
-```csharp
-    private void Awake()
-    {
-        if(_instance == null)
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else 
-        {
-            if (_instance != null)
-                Destroy(gameObject);
-        }
-    }
-```
+#### - 플레이어 이동 :  키입력 → OnMove() → MoveDirection() → Move() 
 
-3. 플레이어의 이동을 관리하는 PlayerContoller 스크립트를 만들어 플레이어의 이동과 점프를 구현했습니다.
-4. 점프는 LayerMask와 Ray 캐스트를 사용해 지면에 닿을 때만 점프를 할 수 있도록 구현했습니다.
-   
-## 체력바 UI
-1. U
+- OnMove() 매서드로 키의 입력을 받아와 Move() 매서드에서 이동을 구현 했습니다. 나중에 카메라 시점 전환 때 플레이어의 키입력에 대한 방향이 필요해 MoveDirection() 매서드를 추가로 만들어 CameraMovement 클래스에서 사용 할 수 있도록 하였습니다.
 
+#### - 점프 : OnJump()
+- 플레이어 점프 : OnJump()로 키 입력을 받아서 isGround() 매서드에서 Ray이 이용해 지면에서만 점프가 가능하도록 구현 했습니다.
+
+### - 체력바 UI
+![alt text](image-1.png)
+![alt text](image-2.png)
+
+#### 체력바, 스태미나 : Condition 클래스 → UIConditions 클래스 →  PlayerCondition 클래스
+- Health와 Stamina UI에 Condition.cs를 컴포넌트로 넣어주고 UICondition에서 관리 할 수 있도록 구현 했습니다.
+
+### - 동적 환경 조사
+
+![alt text](<스크린샷 2025-03-11 150751.png>)
+
+- 카메라 중심에 Ray를 발사해 아이템의 이름과 정보가 뜨도록 구현했습니다.
+
+### - 점프대
+![alt text](<스크린샷 2025-03-11 151039.png>)
+
+- OnCollisionEnter와 ForceMode를 활용해 점프대를 구현했습니다.
+
+### - 아이템 데이터
+![alt text](image-3.png)
+
+- 다양한 아이템 데이터를 ScriptableObject로 정의해서 관리 할 수 있도록 구현했습니다.
+
+### - 아이템 사용
+![alt text](image-5.png)
+
+- 아이템 타입별로 분류해 아이템 사용을 구현했습니다.
+--------------------------------------------------------------------------
+# 도전 기능 구현
+### - 추가 UI
+- 추가 UI는 체력바 생성하는 방식으로 스태미나바를 표시하는 바를 구현했습니다.
+### - 3인칭 시점
+
+- 1인칭 시점
+![alt text](<스크린샷 2025-03-11 151728.png>)
+
+- 3인칭 시점
+![alt text](<스크린샷 2025-03-11 151739.png>)
+
+- Tab키의 입력에 따라 1인칭과 3인칭이 전환되도록 구현했습니다.
+
+### - 움직이는 플랫폼 구현
+![alt text](image-6.png)
+![alt text](image-7.png)
+- 일정 간격으로 움직이는 이동하는 플랫폼을 구현했습니다. 플레이어가 위에 있으면 같은 속도로 움직일 수 있도록 속도를 더해주어 같이 움직 일 수 있도록 구현했습니다. 그리고 오브젝트에 움직이는 방향을 정할 수 있도록 구현했습니다.
+
+### - 벽타기 및 매달리기
+![alt text](<스크린샷 2025-03-11 152336.png>)
+
+- 벽에 붙으면 위로 힘이 작용하고 애니메이션을 적용해 플레이어기 벽타고 올라가는 모습을 구현했습니다.
+
+### - 다양한 아이템 구현
+![alt text](<스크린샷 2025-03-11 152528.png>)
+![alt text](image-8.png)
+
+- 코루틴 함수를 이용해 일정 시간 동안 스피드가 증가하는 아이템을 구현했습니다.
+
+### - 장비 장착
+![alt text](<스크린샷 2025-03-11 152721.png>)
+![alt text](<스크린샷 2025-03-11 152749.png>)
+
+- 장비를 장착하면 특수한 능력을 가지도록 구현했습니다.
+
+### - 레이저 트랩
+![alt text](image-9.png)
+![alt text](image-10.png)
+
+- Ray를 이용해 불이 나오는 플랫폼과 플레이어어에게 날아오는 오브젝트를 구현했습니다.
+
+### - 상호작용 가능한 오브젝트 표시
+![alt text](<스크린샷 2025-03-11 153422.png>)
+
+-  유니티에 IPointerEnterHandler, IPointerExitHandler를 이용해 Alt 키를 눌러 커서를 활설화 시킨 후, 상호작용이 가능한 아이템에 올리면 UI가 표시 되도록 구현했습니다. 
+
+### - 플랫폼 발사기
+![alt text](<스크린샷 2025-03-11 153652.png>)
+- 플레이어를 발사 할 수 있는 올라가 마우스 좌클릭 버튼을 누르고 있으면, 점프 게이지가 차면서 좌클릭 버튼을 떼면 날아가는 발사대를 구현했습니다.
